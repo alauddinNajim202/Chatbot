@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"> 
+	<title>Admin Portal</title>
+	<link rel="stylesheet" href="navbar.css">
+	<!--<link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Open+Sans" rel="stylesheet">-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<header>
+	
+	<nav>
+		<ul>
+			
+			<li><a  href="adminlogin.php">Chats</a></li>
+			<li><a  href="qna.php">Dataset</a></li>
+			<li><a  href="invalid.php">Invalid</a></li>
+			<li><a  href="index.php">Sign Out</a></li>
+		</ul>
+	</nav>
+	<?php
+			if(isset($_POST['logout']))
+			{
+				session_destroy();
+				header('location:index.php');
+			}
+		?>
+</header>
+
+
+<style>
+
+		body{
+			background-color: #4682b4;
+		}
+	
+	input{
+			padding: 2px;
+			margin-left: 1255px;
+			margin-top: 35px;
+			
+			color: #fff;
+			background-color: #000;	
+	}
+
+	li a{
+			text-decoration: none;
+			font-size : 20px;
+			color: aqua;
+		}
+</style>
+
+<a href="insert.php"><input  class="btn btn-primary" type="button" id="insert_btn" value="Insert/Add" align="center"/></a>
+		
+<body>
+	<table class="table bg-light table-striped text-center mt-5 rounded "   cellspacing="5" align="center" border="1px" style="width: 1200px;line-height: 40px">
+		<tr>
+			<th colspan="5"><h2>Chatbot Dataset</h2></th>
+			<h3></h3>
+		
+		
+		<tr>
+			<th width="20px">id</th>
+			<th align="center">Query</th>
+			<th align="center">Reply</th>
+			<th colspan="2" align="center" >Operation</th>
+			
+		</tr>
+		<?php
+		require_once 'dbconfig/config.php';
+		$sql = "SELECT id,question,reply FROM chatbot_hints";
+		$stmt = $db->prepare($sql);
+		$stmt->execute();
+		if($stmt->rowCount() > 0){
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				echo "<tr>
+				<td>".$row["id"]."</td>
+				<td>".$row["question"]." </td>
+				<td> ".$row["reply"]." </td>
+				<td><a class='btn btn-success px-4' href='update.php?rn=$row[id]&ques=$row[question]&rep=$row[reply]'>Edit</td>
+				</tr> ";
+			}
+			echo "</table>";
+		}
+		else{
+			echo "0 result";
+		}
+		$stmt->closeCursor();
+		?>
+
+	</table>
+<script>
+		function checkdelete()
+		 {
+			return Confirm('Are you Sure you want to delete this record ?');
+		}
+
+
+</script>
+</body>
+</html>
